@@ -1,32 +1,32 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Item from "./Item";
-import ItemsAlike from "./ItemsAlike";
+import Item from "./Components/Item";
+import ItemsAlike from "./Components/ItemsAlike";
+import SuccessItems from "./Components/SuccessItems";
+import ReasonPopUp from "./Components/ReasonPopUp";
 
 function MainPage() {
-  const [companyCode, setCompanyCode] = useState(0);
+  const [companyCode, setCompanyCode] = useState("");
   const [companyData, setCompanyData] = useState();
-  const [otherCompanies, setOtherCompany] = useState();
+  const [otherCompany, setOtherCompany] = useState();
+  const [companiesSuccsess, SetcompaniesSuccsess] = useState();
+  const [rejectPopUpRender, SetrejectPopUpRender] = useState(false)
+
 
   const [statusSampling, setStatusSampling] = useState();
   const [statusResult, setstatusResult] = useState();
 
   //   17063451
   function GetValue(event) {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
     let baseURL = `http://localhost:4000/itemSelect/${companyCode}`;
     axios.get(baseURL).then((response) => {
       setCompanyData(response.data);
     });
   }
 
-  function GetNextValue(event) {
-    event.preventDefault();
-    let baseURL = `http://localhost:4000/strataSelect/${companyData[0].Strata}/${companyData[0].SID}`;
-    axios.get(baseURL).then((response) => {
-      setOtherCompany(response.data);
-    });
-  }
   useEffect(() => {
     if (companyData) {
       setStatusSampling(companyData[0].Status_Sampling);
@@ -34,6 +34,7 @@ function MainPage() {
     }
   }, [companyData]);
 
+  //pirveli, kodit status cvlileba
   function ChangeValues() {
     if (companyData) {
       if (
@@ -51,16 +52,54 @@ function MainPage() {
           })
           .then(() => {
             alert("განახლებულია");
+            GetValue();
           });
       }
     }
   }
 
-  if (otherCompanies) {
-    var renderItemsAlike = otherCompanies.map((item) => (
-      <ItemsAlike key={item.id} companyData={item} />
+  //next Value
+  //getNextValue
+  function GetNextValue(event) {
+    event.preventDefault();
+      let baseURL = `http://localhost:4000/strataSelect/${companyData[0].Strata}/${companyData[0].SID}`;
+      axios.get(baseURL).then((response) => {
+        setOtherCompany(response.data);
+      });
+  }
+
+  //update next value
+  function UpdateNextValueStatus() {
+    if (otherCompany[0]) {
+      if (parseInt(otherCompany[0].Status_Sampling) === 0) {
+        let SID = otherCompany[0].SID;
+        let Status_Sampling = 2;
+        axios
+          .post("http://localhost:4000/updateOtherCompanyStatus", {
+            SID: SID,
+            Status_Sampling: Status_Sampling,
+          })
+          .then(() => {
+            alert("სტატუსი განახლებულია (სტატუსი 2)");
+          });
+      }
+    }
+  }
+  useEffect(() => {
+    if (otherCompany) {
+        UpdateNextValueStatus();
+    }
+    // eslint-disable-next-line
+  }, [otherCompany]);
+
+  //succsess items render
+
+  if (companiesSuccsess) {
+    var successItems = companiesSuccsess.map((item) => (
+      <SuccessItems key={item.id} companyData={item} />
     ));
   }
+  
 
   return (
     <div>
@@ -162,39 +201,52 @@ function MainPage() {
           </button>
         </form>
       </nav>
-      <table className="table mx-1">
-        <tbody>
-          <tr className="table-dark text-center">
-            <td>Change</td>
-            <td>SID</td>
-            <td>LongName</td>
-            <td>TaxID1</td>
-            <td>area</td>
-            <td>Location</td>
-            <td>farea</td>
-            <td>FLocation</td>
-            <td>Activity_code</td>
-            <td>Activity_name</td>
-            <td>LegalFormID</td>
-            <td>Phone</td>
-            <td>HeadFname</td>
-            <td>HeadLname</td>
-            <td>Email</td>
-            <td>Web</td>
-            <td>sms</td>
-            <td>TaxEmail</td>
-            <td>TaxPhone</td>
-            <td>user_id</td>
-            <td>Strata1</td>
-            <td>Strata2</td>
-            <td>Strata3</td>
-            <td>Strata</td>
-          </tr>
+      {companyData && (
+        <table className="table mx-1">
+          <tbody>
+            <tr className="table-dark text-center">
+              <td>Change</td>
+              <td>SID</td>
+              <td>LongName</td>
+              <td>TaxID1</td>
+              <td>area</td>
+              <td>Location</td>
+              <td>farea</td>
+              <td>FLocation</td>
+              <td>Activity_code</td>
+              <td>Activity_name</td>
+              <td>LegalFormID</td>
+              <td>Phone</td>
+              <td>HeadFname</td>
+              <td>HeadLname</td>
+              <td>Email</td>
+              <td>Web</td>
+              <td>sms</td>
+              <td>TaxEmail</td>
+              <td>TaxPhone</td>
+              <td>user_id</td>
+              <td>Strata1</td>
+              <td>Strata2</td>
+              <td>Strata3</td>
+              <td>Strata</td>
+            </tr>
 
-          {companyData && <Item companyData={companyData[0]} />}
-          {renderItemsAlike}
-        </tbody>
-      </table>
+            {companyData && <Item companyData={companyData[0]} />}
+            {otherCompany && companyData && (
+                <ItemsAlike
+                companyData={otherCompany[0]}
+                oldCompanyData={companyData[0]}
+                SetcompaniesSuccsess={SetcompaniesSuccsess}
+                SetrejectPopUpRender={SetrejectPopUpRender}
+              />   
+            )}
+            {companiesSuccsess && successItems}
+          </tbody>
+        </table>
+      )}
+      
+      {/* <ReasonPopUp/> */}
+      
     </div>
   );
 }

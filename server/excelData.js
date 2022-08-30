@@ -1,9 +1,10 @@
 const XLSX = require("xlsx");
 var workbook = XLSX.readFile("data/mainData.xlsx");
-
 let worksheet = workbook.Sheets[workbook.SheetNames[0]];
 let companyData = [];
-for (let i = 2; i < 5; i++) {
+let k = 0
+for (let i = 2; i < 8; i++) {
+  k++
   const SID = worksheet[`A${i}`].v;
   const LongName = worksheet[`B${i}`].v;
   const TaxID1 = worksheet[`C${i}`].v;
@@ -31,6 +32,7 @@ for (let i = 2; i < 5; i++) {
   const Status_Result = worksheet[`Y${i}`].v;
 
   companyData.push({
+    id:k,
     SID: SID,
     LongName: LongName,
     TaxID1: TaxID1,
@@ -57,8 +59,5 @@ for (let i = 2; i < 5; i++) {
     Status_Sampling: Status_Sampling,
     Status_Result: Status_Result,
   });
-
-
 }
-
 exports.companyData = companyData
