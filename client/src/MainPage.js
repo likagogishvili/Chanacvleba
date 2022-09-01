@@ -4,13 +4,15 @@ import Item from "./Components/Item";
 import ItemsAlike from "./Components/ItemsAlike";
 import SuccessItems from "./Components/SuccessItems";
 import ReasonPopUp from "./Components/ReasonPopUp";
+import RejectedItems from "./Rejected/RejectedItems";
 
 function MainPage() {
   const [companyCode, setCompanyCode] = useState("");
   const [companyData, setCompanyData] = useState();
   const [otherCompany, setOtherCompany] = useState();
   const [companiesSuccsess, SetcompaniesSuccsess] = useState();
-  const [rejectPopUpRender, SetrejectPopUpRender] = useState(false)
+  const [rejectPopUpRender, SetrejectPopUpRender] = useState(false);
+  const [rejectedRender, SetRejectedRender] = useState(false);
 
 
   const [statusSampling, setStatusSampling] = useState();
@@ -62,10 +64,10 @@ function MainPage() {
   //getNextValue
   function GetNextValue(event) {
     event.preventDefault();
-      let baseURL = `http://localhost:4000/strataSelect/${companyData[0].Strata}/${companyData[0].SID}`;
-      axios.get(baseURL).then((response) => {
-        setOtherCompany(response.data);
-      });
+    let baseURL = `http://localhost:4000/strataSelect/${companyData[0].Strata}/${companyData[0].SID}`;
+    axios.get(baseURL).then((response) => {
+      setOtherCompany(response.data);
+    });
   }
 
   //update next value
@@ -87,7 +89,7 @@ function MainPage() {
   }
   useEffect(() => {
     if (otherCompany) {
-        UpdateNextValueStatus();
+      UpdateNextValueStatus();
     }
     // eslint-disable-next-line
   }, [otherCompany]);
@@ -99,7 +101,6 @@ function MainPage() {
       <SuccessItems key={item.id} companyData={item} />
     ));
   }
-  
 
   return (
     <div>
@@ -199,6 +200,13 @@ function MainPage() {
           >
             შერჩევა
           </button>
+          <button
+            type="button"
+            className="btn btn-dark mx-2"
+            onClick={(e)=> SetRejectedRender(true)}
+          >
+            უარი საწარმოსგან
+          </button>
         </form>
       </nav>
       {companyData && (
@@ -233,20 +241,29 @@ function MainPage() {
 
             {companyData && <Item companyData={companyData[0]} />}
             {otherCompany && companyData && (
-                <ItemsAlike
+              <ItemsAlike
                 companyData={otherCompany[0]}
                 oldCompanyData={companyData[0]}
                 SetcompaniesSuccsess={SetcompaniesSuccsess}
                 SetrejectPopUpRender={SetrejectPopUpRender}
-              />   
+              />
             )}
             {companiesSuccsess && successItems}
           </tbody>
         </table>
       )}
-      
-      {/* <ReasonPopUp/> */}
-      
+      {otherCompany && (
+        <ReasonPopUp
+          rejectPopUpRender={rejectPopUpRender}
+          SetrejectPopUpRender={SetrejectPopUpRender}
+          companyData={otherCompany[0]}
+        />
+      )}
+
+         <RejectedItems
+          SetRejectedRender={SetRejectedRender}
+          rejectedRender={rejectedRender}
+        /> 
     </div>
   );
 }

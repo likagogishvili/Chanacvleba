@@ -1,0 +1,12 @@
+.VideoBoxreject {
+    position: relative;
+    top: 15%;
+    left: 10%;
+    width: 80%;
+    background-color: rgb(255, 255, 255);
+    border: none;
+  }
+  .scrollTable{
+    overflow-y: auto;
+    max-height: 600px;
+  }

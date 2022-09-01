@@ -1,43 +1,6 @@
-import "./item.css";
-import axios from "axios";
-function ItemsAlike(props) {
-  function Accept() {
-    if (
-      props.companyData.Strata &&
-      props.oldCompanyData.SID &&
-      props.companyData.SID
-    ) {
-      let baseURL = `http://localhost:4000/newStratas/${props.companyData.Strata}/${props.oldCompanyData.SID}/${props.companyData.SID}`;
-      axios.get(baseURL).then((response) => {
-        props.SetcompaniesSuccsess(response.data);
-      });
-    }
-  }
-
-  function Reject() {
-    props.SetrejectPopUpRender(true)
-  }
-
+function Ritem(props) {
   return (
-    <tr className="text-center" style={{ background: "#d4d4d4" }}>
-      <td>
-        <div className="px-1 row">
-          <button
-            type="button"
-            className="btn btn-outline-success mt-1 mb-1"
-            onClick={Accept}
-          >
-            Accept
-          </button>
-          <button
-            type="button"
-            className="btn btn-outline-danger"
-            onClick={Reject}
-          >
-            Reject
-          </button>
-        </div>
-      </td>
+    <tr className="text-center" style={{ background: "#E8E9EB" }}>
       <td className="pt-4">{props.companyData?.SID}</td>
       <td className="pt-4">{props.companyData?.LongName}</td>
       <td className="pt-4">{props.companyData?.TaxID1}</td>
@@ -64,4 +27,4 @@ function ItemsAlike(props) {
     </tr>
   );
 }
-export default ItemsAlike;
+export default Ritem;

@@ -30,6 +30,7 @@ for (let i = 2; i < 8; i++) {
   const Strata = worksheet[`W${i}`].v;
   const Status_Sampling = worksheet[`X${i}`].v;
   const Status_Result = worksheet[`Y${i}`].v;
+  const Reject_Reason = worksheet[`Z${i}`].v;
 
   companyData.push({
     id:k,
@@ -58,6 +59,8 @@ for (let i = 2; i < 8; i++) {
     Strata: Strata,
     Status_Sampling: Status_Sampling,
     Status_Result: Status_Result,
+    Reject_Reason:Reject_Reason
   });
 }
+
 exports.companyData = companyData
