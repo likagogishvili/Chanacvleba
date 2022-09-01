@@ -1,4 +1,10 @@
 var data = require("./excelData.js").companyData;
+var users = require("./excelData.js").users;
+
+
+
+
+
 const express = require("express");
 const mysql = require("mysql");
 const app = express();
@@ -196,6 +202,81 @@ app.get("/allRejectedItems", (req, res) => {
     res.send(result);
   });
 });
+
+///////////////////////////////////////////////////////////signIn////////////////////////////////
+app.get("/signInTable", (req, res) => {
+  let sql =
+    "CREATE TABLE users (id int NOT NULL AUTO_INCREMENT, name varchar(255), lname varchar(255), userName varchar(255), password varchar(255), PRIMARY KEY (id));";
+  
+    db.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send("Table created");
+  });
+});
+
+
+app.get("/addUsers", (req, res) => {
+  let sql = "INSERT INTO users SET ?";
+  let query = db.query(
+    "INSERT INTO users (name,lname,userName,password) VALUES ?",
+    [
+      users.map((item) => [
+        item.id,
+        item.name,
+        item.lname,
+        item.userName,
+        item.password
+      ]),
+    ],
+    (err, results) => {
+      if(error){
+        console.log(error);
+      }else{
+        res.send("Table created");
+      }
+    }
+  );
+});
+
+app.get("/addUsers", (req, res) => {
+  let sql = "INSERT INTO users SET ?";
+  let query = db.query(
+    "INSERT INTO users (name,lname,userName,password) VALUES ?",
+    [
+      users.map((item) => [
+        item.id,
+        item.name,
+        item.lname,
+        item.userName,
+        item.password
+      ]),
+    ],
+    (err, results) => {
+      if(error){
+        console.log(error);
+      }else{
+        res.send("Table created");
+      }
+    }
+  );
+});
+
+app.get("/user/:username?/:password?", (req, res) => {
+  const userName = req.params["username"];
+  const password = req.params["password"];
+  if (userName && password) {
+    let sql = `Select * from users Where userName like '${userName}' AND password like '${password}'`;
+    db.query(sql, (err, result) => {
+      if (err) throw err;
+      res.send(result);
+    });
+  } else {
+    res.send(`missing parametres`);
+  }
+});
+
+
+
 
 
 

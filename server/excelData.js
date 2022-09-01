@@ -2,6 +2,12 @@ const XLSX = require("xlsx");
 var workbook = XLSX.readFile("data/mainData.xlsx");
 let worksheet = workbook.Sheets[workbook.SheetNames[0]];
 let companyData = [];
+let users = [
+  {id:1,name:'lika',lname:'gogishvili',userName:'lg',password:'lika2001'},
+  {id:2,name:'manana',lname:'kakhiani',userName:'mk',password:'manana123'},
+
+];
+
 let k = 0
 for (let i = 2; i < 8; i++) {
   k++
@@ -64,3 +70,5 @@ for (let i = 2; i < 8; i++) {
 }
 
 exports.companyData = companyData
+exports.users = users
+

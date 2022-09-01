@@ -17,7 +17,6 @@ function RejectedItems(props) {
       <Ritem key={item.id} companyData={item} />
     ));
   }
-  console.log(rejectedItems)
 
 
   return (
