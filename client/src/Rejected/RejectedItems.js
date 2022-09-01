@@ -47,7 +47,6 @@ function RejectedItems(props) {
                 <table className="table mx-1">
                   <tbody>
                     <tr className="table-dark text-center">
-                      <td>Change</td>
                       <td>SID</td>
                       <td>LongName</td>
                       <td>TaxID1</td>
