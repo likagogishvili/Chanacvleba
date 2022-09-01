@@ -4,8 +4,6 @@ let worksheet = workbook.Sheets[workbook.SheetNames[0]];
 let companyData = [];
 let users = [
   {id:1,name:'lika',lname:'gogishvili',userName:'lg',password:'lika2001'},
-  {id:2,name:'manana',lname:'kakhiani',userName:'mk',password:'manana123'},
-
 ];
 
 let k = 0
