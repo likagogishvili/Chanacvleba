@@ -3,12 +3,18 @@ var workbook = XLSX.readFile("data/mainData.xlsx");
 let worksheet = workbook.Sheets[workbook.SheetNames[0]];
 let companyData = [];
 let users = [
-  {id:1,name:'lika',lname:'gogishvili',userName:'lg',password:'lika2001'},
+  {
+    id: 1,
+    name: "lika",
+    lname: "gogishvili",
+    userName: "lg",
+    password: "lika2001",
+  },
 ];
 
-let k = 0
+let k = 0;
 for (let i = 2; i < 8; i++) {
-  k++
+  k++;
   const SID = worksheet[`A${i}`].v;
   const LongName = worksheet[`B${i}`].v;
   const TaxID1 = worksheet[`C${i}`].v;
@@ -37,7 +43,7 @@ for (let i = 2; i < 8; i++) {
   const Reject_Reason = worksheet[`Z${i}`].v;
 
   companyData.push({
-    id:k,
+    id: k,
     SID: SID,
     LongName: LongName,
     TaxID1: TaxID1,
@@ -63,10 +69,9 @@ for (let i = 2; i < 8; i++) {
     Strata: Strata,
     Status_Sampling: Status_Sampling,
     Status_Result: Status_Result,
-    Reject_Reason:Reject_Reason
+    Reject_Reason: Reject_Reason,
   });
 }
 
-exports.companyData = companyData
-exports.users = users
-
+exports.companyData = companyData;
+exports.users = users;

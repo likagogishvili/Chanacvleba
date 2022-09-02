@@ -277,10 +277,6 @@ app.get("/user/:username?/:password?", (req, res) => {
 
 
 
-
-
-
-
 app.listen("4000", () => {
   console.log("server started on port 4000");
 });

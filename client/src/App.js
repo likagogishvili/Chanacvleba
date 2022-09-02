@@ -1,6 +1,6 @@
 import MainPage from "./MainPage";
 import SignIn from "./SIgnIn/SignIn";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 function App() {
   const [userData, SetUserData] = useState("");
@@ -14,14 +14,10 @@ function App() {
   return (
     <Router>
       <Routes>
-
-        <Route path="/" excact element={<SignIn SetUserData={SetUserData}/>} />
-        {
-          userData.length && 
-        <Route path="/Chanacvleba" element={<MainPage />} />
-
-        }
-
+        <Route path="/" excact element={<SignIn SetUserData={SetUserData} />} />
+        {userData.length && (
+          <Route path="/Chanacvleba" element={<MainPage />} />
+        )}
       </Routes>
     </Router>
   );
