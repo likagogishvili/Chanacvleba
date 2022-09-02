@@ -1,56 +1,57 @@
 import { useState, useEffect } from "react";
-import "./signIn.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function SignIn(props) {
-
   const [userName, SetUserName] = useState("");
   const [password, SetPassword] = useState("");
   const [errorText, SetErrorText] = useState("");
-  
+
   let navigate = useNavigate();
 
   function SubmitSignIn(event) {
-    console.log("test")
     event.preventDefault();
     let baseURL = `http://localhost:4000/login`;
-
-    console.log("userName", userName)
-    console.log("password", password)
-
-    axios.post(baseURL, { userName: userName, password: password }).then((response) => {
-
-      if(response.data.success) {
-        props.SetisUserLoggedIn(true);
-        window.sessionStorage.setItem("user", JSON.stringify(response.data));
-        SetErrorText("");
-      } else {
-        SetErrorText("გთხოვთ შეიყვანოთ სწორი მონაცემები");
-      }
-
-    });
+    axios
+      .post(baseURL, { userName: userName, password: password })
+      .then((response) => {
+        if (response.data.success) {
+          props.SetisUserLoggedIn(true);
+          window.sessionStorage.setItem(
+            "user",
+            JSON.stringify(response.data.response.data)
+          );
+          SetErrorText("");
+        } else {
+          SetErrorText("გთხოვთ შეიყვანოთ სწორი მონაცემები");
+        }
+      });
   }
 
   useEffect(() => {
-    if(JSON.parse(window.sessionStorage.getItem("user"))) {
+    if (JSON.parse(window.sessionStorage.getItem("user"))) {
       props.SetisUserLoggedIn(true);
     }
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-    console.log("testing1")
-    if(props.isUserLoggedIn === true && JSON.parse(window.sessionStorage.getItem("user"))) {
-      console.log("testing2")
+    if (
+      props.isUserLoggedIn === true &&
+      JSON.parse(window.sessionStorage.getItem("user"))
+    ) {
       navigate("/Chanacvleba");
     }
+    // eslint-disable-next-line
   }, [props.isUserLoggedIn]);
-  
 
   return (
     <section className="vh-100" style={{ backgroundColor: "#F8F9FA" }}>
       <div className="container py-5 h-100">
-        <form onSubmit={SubmitSignIn} className="row d-flex justify-content-center align-items-center h-100">
+        <form
+          onSubmit={SubmitSignIn}
+          className="row d-flex justify-content-center align-items-center h-100"
+        >
           <div className="col-12 col-md-8 col-lg-6 col-xl-5">
             <div
               className="card shadow-2-strong"

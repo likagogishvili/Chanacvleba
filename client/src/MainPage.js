@@ -14,16 +14,15 @@ function MainPage(props) {
   const [companiesSuccsess, SetcompaniesSuccsess] = useState();
   const [rejectPopUpRender, SetrejectPopUpRender] = useState(false);
   const [rejectedRender, SetRejectedRender] = useState(false);
-
-  let navigate = useNavigate();
-
   const [statusSampling, setStatusSampling] = useState();
   const [statusResult, setstatusResult] = useState();
+  let navigate = useNavigate();
 
   useEffect(() => {
     if (!JSON.parse(window.sessionStorage.getItem("user"))) {
       navigate("/");
     }
+    // eslint-disable-next-line
   }, []);
 
   //   17063451
@@ -72,10 +71,21 @@ function MainPage(props) {
   //getNextValue
   function GetNextValue(event) {
     event.preventDefault();
-    let baseURL = `http://localhost:4000/strataSelect/${companyData[0].Strata}/${companyData[0].SID}`;
-    axios.get(baseURL).then((response) => {
-      setOtherCompany(response.data);
-    });
+
+    let baseURL = `http://localhost:4000/strataSelect`;
+    let user = JSON.parse(window.sessionStorage.getItem("user"));
+
+    console.log("lId", user);
+
+    axios
+      .post(baseURL, {
+        Strata: companyData[0].Strata,
+        sid: companyData[0].SID,
+        lId: user.locationId,
+      })
+      .then((response) => {
+        setOtherCompany(response.data);
+      });
   }
 
   //update next value
@@ -118,7 +128,7 @@ function MainPage(props) {
   }
 
   return (
-    <div>
+    <div className="container-fluid">
       <div className="d-flex justify-content-between align-items-center">
         <p className="h3 m-4">ჩანაცვლების პროცედურა</p>
         <button
@@ -233,47 +243,53 @@ function MainPage(props) {
         </form>
       </nav>
       {companyData && (
-        <table className="table mx-1">
-          <tbody>
-            <tr className="table-dark text-center">
-              <td>Change</td>
-              <td>SID</td>
-              <td>LongName</td>
-              <td>TaxID1</td>
-              <td>area</td>
-              <td>Location</td>
-              <td>farea</td>
-              <td>FLocation</td>
-              <td>Activity_code</td>
-              <td>Activity_name</td>
-              <td>LegalFormID</td>
-              <td>Phone</td>
-              <td>HeadFname</td>
-              <td>HeadLname</td>
-              <td>Email</td>
-              <td>Web</td>
-              <td>sms</td>
-              <td>TaxEmail</td>
-              <td>TaxPhone</td>
-              <td>user_id</td>
-              <td>Strata1</td>
-              <td>Strata2</td>
-              <td>Strata3</td>
-              <td>Strata</td>
-            </tr>
+        <div className="table-responsive">
+          <table className="table mx-1">
+            <tbody>
+              <tr className="table-dark text-center">
+                <td>Change</td>
+                <td>SID</td>
+                <td>LongName</td>
+                <td>TaxID1</td>
+                <td>area</td>
+                <td>Location</td>
+                <td>farea</td>
+                <td>FLocation</td>
+                <td>Activity_code</td>
+                <td>Activity_name</td>
+                <td>LegalFormID</td>
+                <td>Phone</td>
+                <td>HeadFname</td>
+                <td>HeadLname</td>
+                <td>Email</td>
+                <td>Web</td>
+                <td>sms</td>
+                <td>TaxEmail</td>
+                <td>TaxPhone</td>
+                <td>user_id</td>
+                <td>Strata1</td>
+                <td>Strata2</td>
+                <td>Strata3</td>
+                <td>Strata</td>
+              </tr>
 
-            {companyData && <Item companyData={companyData[0]} />}
-            {otherCompany && companyData && (
-              <ItemsAlike
-                companyData={otherCompany[0]}
-                oldCompanyData={companyData[0]}
-                SetcompaniesSuccsess={SetcompaniesSuccsess}
-                SetrejectPopUpRender={SetrejectPopUpRender}
-              />
-            )}
-            {companiesSuccsess && successItems}
-          </tbody>
-        </table>
+              {companyData && <Item companyData={companyData[0]} />}
+
+              {companyData && otherCompany && otherCompany.length ? (
+                <ItemsAlike
+                  companyData={otherCompany[0]}
+                  oldCompanyData={companyData[0]}
+                  SetcompaniesSuccsess={SetcompaniesSuccsess}
+                  SetrejectPopUpRender={SetrejectPopUpRender}
+                />
+              ) : (
+                alert("ვერ მოიძებნა")
+              )}
+
+              {companiesSuccsess && successItems}
+            </tbody>
+          </table>
+        </div>
       )}
       {otherCompany && (
         <ReasonPopUp

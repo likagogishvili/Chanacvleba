@@ -116,14 +116,24 @@ app.get("/itemSelect/:id?", (req, res) => {
 });
 
 //get similar companies with same strata
-app.get("/strataSelect/:Strata?/:sid?", (req, res) => {
-  const Strata = req.params["Strata"];
-  const sid = req.params["sid"];
-  if (Strata && sid) {
-    let sql = `Select * from companies Where Status_Sampling like 0 && Strata like '${Strata}' && SID not like ${sid} && TaxID1 not like ${sid} Limit 1`;
+app.post("/strataSelect", (req, res) => {
+  const Strata = req.body.Strata;
+  const sid = req.body.sid;
+  const lId = req.body.lId;
+
+  if (Strata && sid && lId) {
+    let sql = `Select * from companies Where Status_Sampling = 0 && farea = '${lId}' && Strata = '${Strata}' && SID != ${sid} && TaxID1 != ${sid} Limit 1`;
     db.query(sql, (err, result) => {
       if (err) throw err;
-      res.send(result);
+      if (!result.length) {
+        let sqlAlter = `Select * from companies Where Status_Sampling = 0 && Strata = '${Strata}' && SID != ${sid} && TaxID1 != ${sid} Limit 1`;
+        db.query(sqlAlter, (errAlter, resultAlter) => {
+          if (errAlter) throw errAlter;
+          res.send(resultAlter);
+        });
+      } else {
+        res.send(result);
+      }
     });
   } else {
     res.send(`missing parametres`);
@@ -231,7 +241,7 @@ app.get("/addUsers", (req, res) => {
       if (err) {
         console.log(err);
       } else {
-        res.send("Table created");
+        res.send("Values added");
       }
     }
   );
