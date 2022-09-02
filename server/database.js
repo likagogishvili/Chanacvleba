@@ -1,12 +1,9 @@
 var data = require("./excelData.js").companyData;
 var users = require("./excelData.js").users;
-
-
-
-
+let CryptoJS = require("crypto-js");
 
 const express = require("express");
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -16,11 +13,12 @@ app.use(express.json());
 
 // Create connection
 const db = mysql.createConnection({
-  host: "localhost",
+  host: "",
   user: "root",
-  password: "root1234",
+  password: "Likagogishvili1@",
   database: "Chanacvlebebi",
 });
+
 //connect
 db.connect((err) => {
   if (err) {
@@ -28,6 +26,7 @@ db.connect((err) => {
   }
   console.log("MySql Connected");
 });
+
 // Create db
 app.get("/createdb", (req, res) => {
   let sql = "CREATE DATABASE Chanacvlebebi";
@@ -36,6 +35,7 @@ app.get("/createdb", (req, res) => {
     res.send("Database created");
   });
 });
+
 // Create Table
 app.get("/companies", (req, res) => {
   let sql =
@@ -79,13 +79,13 @@ app.get("/addCompany", (req, res) => {
         item.Strata,
         item.Status_Sampling,
         item.Status_Result,
-        item.Reject_Reason
+        item.Reject_Reason,
       ]),
     ],
     (err, results) => {
-      if(error){
-        console.log(error);
-      }else{
+      if (err) {
+        console.log(err);
+      } else {
         res.send("Table created");
       }
     }
@@ -186,7 +186,7 @@ app.post("/clickedItemUpdate", (req, res) => {
   const SID = req.body.SID;
   const Status_Sampling = req.body.Status_Sampling;
   const Reject_Reason = req.body.Reject_Reason;
-console.log(SID, Status_Sampling, Reject_Reason)
+  console.log(SID, Status_Sampling, Reject_Reason);
   const sqlUpdate = `UPDATE companies SET Status_Sampling ='${Status_Sampling}', Reject_Reason='${Reject_Reason}' WHERE SID like ${SID} OR TaxID1 like ${SID}`;
   db.query(sqlUpdate, (err, result) => {
     if (err) throw err;
@@ -206,76 +206,71 @@ app.get("/allRejectedItems", (req, res) => {
 ///////////////////////////////////////////////////////////signIn////////////////////////////////
 app.get("/signInTable", (req, res) => {
   let sql =
-    "CREATE TABLE users (id int NOT NULL AUTO_INCREMENT, name varchar(255), lname varchar(255), userName varchar(255), password varchar(255), PRIMARY KEY (id));";
-  
-    db.query(sql, (err, result) => {
+    "CREATE TABLE users (id int NOT NULL AUTO_INCREMENT, name varchar(255), lname varchar(255), userName varchar(255), password varchar(255),locationId varchar(255), PRIMARY KEY (id));";
+
+  db.query(sql, (err, result) => {
     if (err) throw err;
     res.send("Table created");
   });
 });
 
-
 app.get("/addUsers", (req, res) => {
   let sql = "INSERT INTO users SET ?";
   let query = db.query(
-    "INSERT INTO users (name,lname,userName,password) VALUES ?",
+    "INSERT INTO users (name,lname,userName,password,locationId) VALUES ?",
     [
       users.map((item) => [
-        item.id,
         item.name,
         item.lname,
         item.userName,
-        item.password
+        item.password,
+        item.locationId,
       ]),
     ],
     (err, results) => {
-      if(error){
-        console.log(error);
-      }else{
+      if (err) {
+        console.log(err);
+      } else {
         res.send("Table created");
       }
     }
   );
 });
 
-app.get("/addUsers", (req, res) => {
-  let sql = "INSERT INTO users SET ?";
-  let query = db.query(
-    "INSERT INTO users (name,lname,userName,password) VALUES ?",
-    [
-      users.map((item) => [
-        item.id,
-        item.name,
-        item.lname,
-        item.userName,
-        item.password
-      ]),
-    ],
-    (err, results) => {
-      if(error){
-        console.log(error);
-      }else{
-        res.send("Table created");
-      }
-    }
-  );
-});
+app.post("/login", (req, res) => {
+  const userName = req.body.userName;
+  const password = req.body.password;
 
-app.get("/user/:username?/:password?", (req, res) => {
-  const userName = req.params["username"];
-  const password = req.params["password"];
+  let r = { success: false, response: { data: [] }, error: "" };
+
   if (userName && password) {
-    let sql = `Select * from users Where userName like '${userName}' AND password like '${password}'`;
+    let sql = `Select * from users Where userName = '${userName}' AND password = '${password}' limit 1`;
+
     db.query(sql, (err, result) => {
       if (err) throw err;
-      res.send(result);
+
+      if (result[0]) {
+        let user = result[0];
+
+        user.password = CryptoJS.AES.encrypt(
+          JSON.stringify(req.body.password),
+          "lika_LIKA"
+        ).toString();
+
+        r.response.data = user;
+        r.success = true;
+
+        res.send(r);
+      } else {
+        r.error = `User Not Found`;
+        res.send(r);
+      }
     });
   } else {
-    res.send(`missing parametres`);
+    r.error = `missing parametres`;
+    res.send(r);
   }
 });
-
-
 
 app.listen("4000", () => {
   console.log("server started on port 4000");

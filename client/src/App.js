@@ -3,21 +3,22 @@ import SignIn from "./SIgnIn/SignIn";
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 function App() {
-  const [userData, SetUserData] = useState("");
-  useEffect(() => {
-    SetUserData(window.sessionStorage.getItem("userData"));
-  }, []);
 
-  useEffect(() => {
-    window.sessionStorage.setItem("userData", userData);
-  }, [userData]);
+  const [isUserLoggedIn, SetisUserLoggedIn] = useState();
+
+  // useEffect(() => {
+  //   SetUserData(window.sessionStorage.getItem("userData"));
+  // }, []);
+
+  // useEffect(() => {
+  //   window.sessionStorage.setItem("userData", userData);
+  // }, [userData]);
+  
   return (
     <Router>
       <Routes>
-        <Route path="/" excact element={<SignIn SetUserData={SetUserData} />} />
-        {userData.length && (
-          <Route path="/Chanacvleba" element={<MainPage />} />
-        )}
+        <Route path="/" excact element={<SignIn isUserLoggedIn={isUserLoggedIn} SetisUserLoggedIn={SetisUserLoggedIn} />} />
+        <Route path="/Chanacvleba" element={<MainPage isUserLoggedIn={isUserLoggedIn} SetisUserLoggedIn={SetisUserLoggedIn} />} />
       </Routes>
     </Router>
   );

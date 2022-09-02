@@ -1,14 +1,24 @@
 const XLSX = require("xlsx");
-var workbook = XLSX.readFile("data/mainData.xlsx");
+var workbook = XLSX.readFile("./data/mainData.xlsx");
 let worksheet = workbook.Sheets[workbook.SheetNames[0]];
 let companyData = [];
+
 let users = [
   {
-    id: 1,
     name: "lika",
     lname: "gogishvili",
     userName: "lg",
     password: "lika2001",
+    locationId: "123",
+
+  },
+  {
+    name: "John",
+    lname: "Doe",
+    userName: "jl",
+    password: "jl123",
+    locationId: "123",
+
   },
 ];
 

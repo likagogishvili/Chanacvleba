@@ -1,34 +1,56 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./signIn.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function SignIn(props) {
+
   const [userName, SetUserName] = useState("");
   const [password, SetPassword] = useState("");
-  let navigate = useNavigate();
   const [errorText, SetErrorText] = useState("");
+  
+  let navigate = useNavigate();
+
   function SubmitSignIn(event) {
+    console.log("test")
     event.preventDefault();
-    let baseURL = `http://localhost:4000/user/${userName}/${password}`;
-    axios.get(baseURL).then((response) => {
-      if (response.data) {
-        props.SetUserData(response.data);
-        if (response.data.length) {
-          navigate("/Chanacvleba", { replace: true });
-          SetErrorText("");
-        }
-      }
-      if (response.data.length === 0) {
+    let baseURL = `http://localhost:4000/login`;
+
+    console.log("userName", userName)
+    console.log("password", password)
+
+    axios.post(baseURL, { userName: userName, password: password }).then((response) => {
+
+      if(response.data.success) {
+        props.SetisUserLoggedIn(true);
+        window.sessionStorage.setItem("user", JSON.stringify(response.data));
+        SetErrorText("");
+      } else {
         SetErrorText("გთხოვთ შეიყვანოთ სწორი მონაცემები");
       }
+
     });
   }
+
+  useEffect(() => {
+    if(JSON.parse(window.sessionStorage.getItem("user"))) {
+      props.SetisUserLoggedIn(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log("testing1")
+    if(props.isUserLoggedIn === true && JSON.parse(window.sessionStorage.getItem("user"))) {
+      console.log("testing2")
+      navigate("/Chanacvleba");
+    }
+  }, [props.isUserLoggedIn]);
+  
 
   return (
     <section className="vh-100" style={{ backgroundColor: "#F8F9FA" }}>
       <div className="container py-5 h-100">
-        <div className="row d-flex justify-content-center align-items-center h-100">
+        <form onSubmit={SubmitSignIn} className="row d-flex justify-content-center align-items-center h-100">
           <div className="col-12 col-md-8 col-lg-6 col-xl-5">
             <div
               className="card shadow-2-strong"
@@ -68,7 +90,6 @@ function SignIn(props) {
                   className="btn btn-success btn-lg btn-block mb-2"
                   type="submit"
                   style={{ width: "100%" }}
-                  onClick={SubmitSignIn}
                 >
                   შესვლა
                 </button>
@@ -77,7 +98,7 @@ function SignIn(props) {
               </div>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </section>
   );

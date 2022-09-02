@@ -5,8 +5,9 @@ import ItemsAlike from "./Components/ItemsAlike";
 import SuccessItems from "./Components/SuccessItems";
 import ReasonPopUp from "./Components/ReasonPopUp";
 import RejectedItems from "./Rejected/RejectedItems";
+import { useNavigate } from "react-router-dom";
 
-function MainPage() {
+function MainPage(props) {
   const [companyCode, setCompanyCode] = useState("");
   const [companyData, setCompanyData] = useState();
   const [otherCompany, setOtherCompany] = useState();
@@ -14,9 +15,16 @@ function MainPage() {
   const [rejectPopUpRender, SetrejectPopUpRender] = useState(false);
   const [rejectedRender, SetRejectedRender] = useState(false);
 
+  let navigate = useNavigate();
 
   const [statusSampling, setStatusSampling] = useState();
   const [statusResult, setstatusResult] = useState();
+
+  useEffect(() => {
+    if (!JSON.parse(window.sessionStorage.getItem("user"))) {
+      navigate("/");
+    }
+  }, []);
 
   //   17063451
   function GetValue(event) {
@@ -102,9 +110,24 @@ function MainPage() {
     ));
   }
 
+  //sign out
+  function SignOut() {
+    window.sessionStorage.removeItem("user");
+    props.SetisUserLoggedIn(false);
+    navigate("/", { replace: true });
+  }
+
   return (
     <div>
-      <p className="h3 m-4">ჩანაცვლების პროცედურა</p>
+      <div className="d-flex justify-content-between align-items-center">
+        <p className="h3 m-4">ჩანაცვლების პროცედურა</p>
+        <button
+          className="btn btn-outline-primary my-2 my-sm-0 mx-5"
+          onClick={SignOut}
+        >
+          გასვლა
+        </button>
+      </div>
       <nav className="navbar navbar-light bg-light" style={{ width: "100%" }}>
         <form
           className="form-inline d-flex flex-row m-4"
@@ -203,7 +226,7 @@ function MainPage() {
           <button
             type="button"
             className="btn btn-dark mx-2"
-            onClick={(e)=> SetRejectedRender(true)}
+            onClick={(e) => SetRejectedRender(true)}
           >
             უარი საწარმოსგან
           </button>
@@ -260,10 +283,10 @@ function MainPage() {
         />
       )}
 
-         <RejectedItems
-          SetRejectedRender={SetRejectedRender}
-          rejectedRender={rejectedRender}
-        /> 
+      <RejectedItems
+        SetRejectedRender={SetRejectedRender}
+        rejectedRender={rejectedRender}
+      />
     </div>
   );
 }
