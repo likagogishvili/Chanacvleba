@@ -10,7 +10,6 @@ let users = [
     userName: "lg",
     password: "lika2001",
     locationId: "123",
-
   },
   {
     name: "John",
@@ -18,7 +17,6 @@ let users = [
     userName: "jl",
     password: "jl123",
     locationId: "123",
-
   },
 ];
 

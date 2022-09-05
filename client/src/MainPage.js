@@ -275,16 +275,14 @@ function MainPage(props) {
 
               {companyData && <Item companyData={companyData[0]} />}
 
-              {companyData && otherCompany && otherCompany.length ? (
+              {companyData && otherCompany && otherCompany.length && (
                 <ItemsAlike
                   companyData={otherCompany[0]}
                   oldCompanyData={companyData[0]}
                   SetcompaniesSuccsess={SetcompaniesSuccsess}
                   SetrejectPopUpRender={SetrejectPopUpRender}
                 />
-              ) : (
-                alert("ვერ მოიძებნა")
-              )}
+              ) }
 
               {companiesSuccsess && successItems}
             </tbody>
