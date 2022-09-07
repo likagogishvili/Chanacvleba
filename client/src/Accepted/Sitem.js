@@ -1,26 +1,26 @@
 import axios from "axios";
-import {useState} from 'react'
+import { useState } from "react";
 function Sitem(props) {
   const [statusResult, setstatusResult] = useState();
-  function Minicheba(e){
-    if(e.target.id){
-        let SID = e.target.id;
-        let Status_Sampling = 3;
-        axios
-          .post("http://localhost:4000/clickedItemUpdate", {
-            SID: SID,
-            Status_Sampling: Status_Sampling,
-          })
-          .then(() => {
-            alert("სტატუსი განახლებულია (სტატუსი 3)");
-          });
-      }
+  function Minicheba(e) {
+    if (e.target.id) {
+      let SID = e.target.id;
+      let Status_Sampling = 3;
+      axios
+        .post("http://localhost:4000/clickedItemUpdate", {
+          SID: SID,
+          Status_Sampling: Status_Sampling,
+        })
+        .then(() => {
+          alert("სტატუსი განახლებულია (სტატუსი 3)");
+        });
+    }
   }
 
   function Reject(e) {
     e.preventDefault();
-    console.log(statusResult)
-    console.log(e.target.id)
+    console.log(statusResult);
+    console.log(e.target.id);
     let SID = e.target.id;
     let Status_Sampling = 4;
     let Reject_Reason = statusResult;
@@ -49,20 +49,24 @@ function Sitem(props) {
           </button>
 
           <select
-              className="custom-select my-1"
-              id="status_res"
-              defaultValue={"DEFAULT"}
-              value={statusResult}
-              onChange={(e) => {
-                setstatusResult(e.target.value);
-              }}
-            >
-              <option value="DEFAULT" disabled style={{fontSize:'3px'}}></option>
-              <option value="0">0</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
+            className="custom-select my-1"
+            id="status_res"
+            defaultValue={"DEFAULT"}
+            value={statusResult}
+            onChange={(e) => {
+              setstatusResult(e.target.value);
+            }}
+          >
+            <option
+              value="DEFAULT"
+              disabled
+              style={{ fontSize: "3px" }}
+            ></option>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
           <button
             type="button"
             className="btn btn-outline-danger"
@@ -74,6 +78,7 @@ function Sitem(props) {
         </div>
       </td>
       <td className="pt-4">{props.companyData?.SID}</td>
+      <td className="pt-4">{props.companyData?.ParentId}</td>
       <td className="pt-4">{props.companyData?.LongName}</td>
       <td className="pt-4">{props.companyData?.TaxID1}</td>
       <td className="pt-4">{props.companyData?.area?.replace(/\s/g, "")}</td>

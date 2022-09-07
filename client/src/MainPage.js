@@ -119,10 +119,13 @@ function MainPage(props) {
       if (parseInt(otherCompany[0].Status_Sampling) === 0) {
         let SID = otherCompany[0].SID;
         let Status_Sampling = 2;
+        let parentId = companyData[0].SID;
+
         axios
           .post("http://localhost:4000/updateOtherCompanyStatus", {
             SID: SID,
             Status_Sampling: Status_Sampling,
+            parentId: parentId,
           })
           .then(() => {
             alert("სტატუსი განახლებულია (სტატუსი 2)");
@@ -146,20 +149,15 @@ function MainPage(props) {
     navigate("/", { replace: true });
   }
 
-
-//სტატუსის ცვლილება
-
+  //სტატუსის ცვლილება
 
   function ChangeStatus() {
-      let baseURL = `http://localhost:4000/newStratas`;
-      axios.get(baseURL).then((response) => {
-        SetcompaniesSuccsess(response.data);
-    })
-    SetSuccessRender(true)
+    let baseURL = `http://localhost:4000/newStratas`;
+    axios.get(baseURL).then((response) => {
+      SetcompaniesSuccsess(response.data);
+    });
+    SetSuccessRender(true);
   }
-
-
-
 
   return (
     <div className="container-fluid">
@@ -312,7 +310,6 @@ function MainPage(props) {
                   <td>{otherCompanyNotFound}</td>
                 </tr>
               )}
-
             </tbody>
           </table>
         </div>
@@ -331,9 +328,9 @@ function MainPage(props) {
       />
 
       <SuccessItems
-      SetSuccessRender={SetSuccessRender}
-      successRender={successRender}
-      companiesSuccsess={companiesSuccsess}
+        SetSuccessRender={SetSuccessRender}
+        successRender={successRender}
+        companiesSuccsess={companiesSuccsess}
       />
     </div>
   );

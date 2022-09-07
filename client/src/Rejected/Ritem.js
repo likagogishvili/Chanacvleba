@@ -2,6 +2,7 @@ function Ritem(props) {
   return (
     <tr className="text-center" style={{ background: "#E8E9EB" }}>
       <td className="pt-4">{props.companyData?.SID}</td>
+      <td className="pt-4">{props.companyData?.ParentId}</td>
       <td className="pt-4">{props.companyData?.LongName}</td>
       <td className="pt-4">{props.companyData?.TaxID1}</td>
       <td className="pt-4">{props.companyData?.area?.replace(/\s/g, "")}</td>
