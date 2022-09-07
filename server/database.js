@@ -105,7 +105,7 @@ app.get("/companiesSelect", (req, res) => {
 app.get("/itemSelect/:id?", (req, res) => {
   const { id } = req.params;
   if (id) {
-    let sql = `Select * from companies Where SID like '${id}' OR TaxID1 like '${id}'`;
+    let sql = `Select * from companies Where (SID like '${id}' OR TaxID1 like '${id}') AND Status_Sampling=1`;
     db.query(sql, (err, result) => {
       if (err) throw err;
       res.send(result);
@@ -122,7 +122,7 @@ app.post("/strataSelect", (req, res) => {
   const lId = req.body.lId;
 
   if (Strata && sid && lId) {
-    let sql = `Select * from companies Where Status_Sampling = 0 && farea = '${lId}' && Strata = '${Strata}' && SID != ${sid} && TaxID1 != ${sid} Limit 1`;
+    let sql = `Select * from companies Where Status_Sampling = 0 && area like '${lId}%' && Strata = '${Strata}' && SID != ${sid} && TaxID1 != ${sid} Limit 1`;
     db.query(sql, (err, result) => {
       if (err) throw err;
       if (!result.length) {
@@ -145,7 +145,7 @@ app.post("/updateDB", (req, res) => {
   const SID = req.body.SID;
   const Status_Sampling = req.body.Status_Sampling;
   const Status_Result = req.body.Status_Result;
-  const sqlUpdate = `UPDATE companies SET Status_Sampling = '${Status_Sampling}', Status_Result = '${Status_Result}' WHERE SID like '${SID}' OR TaxID1 like '${SID}' `;
+  const sqlUpdate = `UPDATE companies SET Status_Result = '${Status_Result}' WHERE SID like '${SID}' OR TaxID1 like '${SID}' `;
   db.query(sqlUpdate, (err, result) => {
     if (err) throw err;
     res.send(result);
@@ -164,20 +164,23 @@ app.post("/updateOtherCompanyStatus", (req, res) => {
   });
 });
 
+//acceptStatusStrata
+app.post("/acceptStatusStrata", (req, res) => {
+  const SID = req.body.SID;
+  const sqlUpdate = `UPDATE companies SET Status_Sampling = '3' WHERE SID like '${SID}' OR TaxID1 like '${SID}' `;
+  db.query(sqlUpdate, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
 //select all stratas with status 2
-app.get("/newStratas/:Strata?/:sid1?/:sid2?", (req, res) => {
-  const Strata = req.params["Strata"];
-  const sid1 = req.params["sid1"];
-  const sid2 = req.params["sid2"];
-  if (Strata && sid1 && sid2) {
-    let sql = `Select * from companies Where Status_Sampling like 2 && Strata like '${Strata}' && SID not in (${sid1}, ${sid2}) && TaxID1 not in (${sid1}, ${sid2})`;
-    db.query(sql, (err, result) => {
-      if (err) throw err;
-      res.send(result);
-    });
-  } else {
-    res.send(`missing parametres`);
-  }
+app.get("/newStratas", (req, res) => {
+  let sql = `Select * from companies Where Status_Sampling=2`;
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
 });
 
 //status rejected
@@ -196,8 +199,7 @@ app.post("/clickedItemUpdate", (req, res) => {
   const SID = req.body.SID;
   const Status_Sampling = req.body.Status_Sampling;
   const Reject_Reason = req.body.Reject_Reason;
-  console.log(SID, Status_Sampling, Reject_Reason);
-  const sqlUpdate = `UPDATE companies SET Status_Sampling ='${Status_Sampling}', Reject_Reason='${Reject_Reason}' WHERE SID like ${SID} OR TaxID1 like ${SID}`;
+  const sqlUpdate = `UPDATE companies SET Status_Sampling ='${Status_Sampling}', Status_Result='${Reject_Reason}' WHERE SID like ${SID} OR TaxID1 like ${SID}`;
   db.query(sqlUpdate, (err, result) => {
     if (err) throw err;
     res.send(result);

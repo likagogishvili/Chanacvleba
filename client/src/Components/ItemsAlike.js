@@ -2,17 +2,16 @@ import "./item.css";
 import axios from "axios";
 function ItemsAlike(props) {
   function Accept() {
-    if (
-      props.companyData.Strata &&
-      props.oldCompanyData.SID &&
-      props.companyData.SID
-    ) {
-      let baseURL = `http://localhost:4000/newStratas/${props.companyData.Strata}/${props.oldCompanyData.SID}/${props.companyData.SID}`;
-      axios.get(baseURL).then((response) => {
-        props.SetcompaniesSuccsess(response.data);
-      });
-    }
+        let SID = props.companyData.SID;
+        axios
+          .post("http://localhost:4000/acceptStatusStrata", {
+            SID: SID,
+          })
+          .then(() => {
+            alert("მიენიჭა სტატუსი 3");
+          });
   }
+
 
   function Reject() {
     props.SetrejectPopUpRender(true)

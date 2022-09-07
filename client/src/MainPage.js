@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Item from "./Components/Item";
 import ItemsAlike from "./Components/ItemsAlike";
-import SuccessItems from "./Components/SuccessItems";
+import SuccessItems from "./Accepted/SuccessItems";
 import ReasonPopUp from "./Components/ReasonPopUp";
 import RejectedItems from "./Rejected/RejectedItems";
 import { useNavigate } from "react-router-dom";
+import TableHeaders from "./Components/TableHeaders";
 
 function MainPage(props) {
   const [companyCode, setCompanyCode] = useState("");
@@ -14,7 +15,11 @@ function MainPage(props) {
   const [companiesSuccsess, SetcompaniesSuccsess] = useState();
   const [rejectPopUpRender, SetrejectPopUpRender] = useState(false);
   const [rejectedRender, SetRejectedRender] = useState(false);
-  const [statusSampling, setStatusSampling] = useState();
+  const [successRender, SetSuccessRender] = useState(false);
+  const [notFound, SetNotFound] = useState("");
+  const [otherCompanyNotFound, setOtherCompanyNotFound] = useState();
+
+  // const [statusSampling, setStatusSampling] = useState();
   const [statusResult, setstatusResult] = useState();
   let navigate = useNavigate();
 
@@ -26,6 +31,7 @@ function MainPage(props) {
   }, []);
 
   //   17063451
+
   function GetValue(event) {
     if (event) {
       event.preventDefault();
@@ -38,24 +44,22 @@ function MainPage(props) {
 
   useEffect(() => {
     if (companyData) {
-      setStatusSampling(companyData[0].Status_Sampling);
-      setstatusResult(companyData[0].Status_Result);
+      if (companyData[0]) {
+        setstatusResult(companyData[0]?.Status_Result);
+      } else {
+        SetNotFound("ვერ მოიძებნა");
+      }
     }
   }, [companyData]);
 
   //pirveli, kodit status cvlileba
   function ChangeValues() {
     if (companyData) {
-      if (
-        companyData[0].Status_Sampling !== statusSampling ||
-        companyData[0].Status_Result !== statusResult
-      ) {
-        let Status_Sampling = statusSampling;
+      if (companyData[0].Status_Result !== statusResult) {
         let Status_Result = statusResult;
         let SID = companyData[0].SID;
         axios
           .post("http://localhost:4000/updateDB", {
-            Status_Sampling: Status_Sampling,
             Status_Result: Status_Result,
             SID: SID,
           })
@@ -67,21 +71,42 @@ function MainPage(props) {
     }
   }
 
+  //pirveli, kodit status cvlileba
+  // function ChangeValues() {
+  //   if (companyData) {
+  //     if (
+  //       companyData[0].Status_Sampling !== statusSampling ||
+  //       companyData[0].Status_Result !== statusResult
+  //     ) {
+  //       let Status_Sampling = statusSampling;
+  //       let Status_Result = statusResult;
+  //       let SID = companyData[0].SID;
+  //       axios
+  //         .post("http://localhost:4000/updateDB", {
+  //           Status_Sampling: Status_Sampling,
+  //           Status_Result: Status_Result,
+  //           SID: SID,
+  //         })
+  //         .then(() => {
+  //           alert("განახლებულია");
+  //           GetValue();
+  //         });
+  //     }
+  //   }
+  // }
+
   //next Value
   //getNextValue
+
   function GetNextValue(event) {
     event.preventDefault();
 
     let baseURL = `http://localhost:4000/strataSelect`;
-    let user = JSON.parse(window.sessionStorage.getItem("user"));
-
-    console.log("lId", user);
-
     axios
       .post(baseURL, {
         Strata: companyData[0].Strata,
         sid: companyData[0].SID,
-        lId: user.locationId,
+        lId: companyData[0].area,
       })
       .then((response) => {
         setOtherCompany(response.data);
@@ -103,6 +128,8 @@ function MainPage(props) {
             alert("სტატუსი განახლებულია (სტატუსი 2)");
           });
       }
+    } else {
+      setOtherCompanyNotFound("ვერ მოიძებნა");
     }
   }
   useEffect(() => {
@@ -112,20 +139,27 @@ function MainPage(props) {
     // eslint-disable-next-line
   }, [otherCompany]);
 
-  //succsess items render
-
-  if (companiesSuccsess) {
-    var successItems = companiesSuccsess.map((item) => (
-      <SuccessItems key={item.id} companyData={item} />
-    ));
-  }
-
   //sign out
   function SignOut() {
     window.sessionStorage.removeItem("user");
     props.SetisUserLoggedIn(false);
     navigate("/", { replace: true });
   }
+
+
+//სტატუსის ცვლილება
+
+
+  function ChangeStatus() {
+      let baseURL = `http://localhost:4000/newStratas`;
+      axios.get(baseURL).then((response) => {
+        SetcompaniesSuccsess(response.data);
+    })
+    SetSuccessRender(true)
+  }
+
+
+
 
   return (
     <div className="container-fluid">
@@ -141,11 +175,11 @@ function MainPage(props) {
       <nav className="navbar navbar-light bg-light" style={{ width: "100%" }}>
         <form
           className="form-inline d-flex flex-row m-4"
-          style={{ width: "60%" }}
+          style={{ width: "100%" }}
         >
           <input
             className="form-control mr-sm-2 mx-2"
-            style={{ width: "40%" }}
+            style={{ width: "20%" }}
             type="number"
             placeholder="შეიყვანეთ საწარმოს კოდი"
             onChange={(e) => setCompanyCode(e.target.value)}
@@ -157,13 +191,49 @@ function MainPage(props) {
           >
             ძებნა
           </button>
-        </form>
 
+          <div className="input-group mx-4" style={{ width: "60%" }}>
+            <div className="input-group-prepend">
+              <label
+                className="input-group-text mx-2"
+                style={{ border: "none", backgroundColor: "white" }}
+                htmlFor="inputGroupSelect01"
+              >
+                მონიშნეთ შესაბამისი სტატუსი
+              </label>
+            </div>
+
+            <select
+              className="custom-select"
+              id="status_res"
+              defaultValue={"DEFAULT"}
+              value={statusResult}
+              onChange={(e) => {
+                setstatusResult(e.target.value);
+              }}
+            >
+              <option value="DEFAULT" disabled></option>
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+            </select>
+
+            <button
+              type="button"
+              className="btn btn-secondary mx-2"
+              onClick={ChangeValues}
+              style={{ borderRadius: "10px" }}
+            >
+              მინიჭება
+            </button>
+          </div>
+        </form>
         <form
           className="form-inline d-flex flex-row m-4"
           style={{ width: "60%" }}
         >
-          <div className="input-group" style={{ width: "25%" }}>
+          {/* <div className="input-group" style={{ width: "25%" }}>
             <div className="input-group-prepend">
               <label
                 className="input-group-text mx-2"
@@ -190,41 +260,7 @@ function MainPage(props) {
               <option value="3">3</option>
               <option value="4">4</option>
             </select>
-          </div>
-          <div className="input-group" style={{ width: "25%" }}>
-            <div className="input-group-prepend">
-              <label
-                className="input-group-text mx-2"
-                style={{ border: "none", backgroundColor: "white" }}
-                htmlFor="inputGroupSelect01"
-              >
-                Status_results
-              </label>
-            </div>
-
-            <select
-              className="custom-select"
-              id="status_res"
-              defaultValue={"DEFAULT"}
-              value={statusResult}
-              onChange={(e) => {
-                setstatusResult(e.target.value);
-              }}
-            >
-              <option value="DEFAULT" disabled></option>
-              <option value="0">0</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-            </select>
-          </div>
-          <button
-            type="button"
-            className="btn btn-secondary"
-            onClick={ChangeValues}
-          >
-            განახლება
-          </button>
+          </div> */}
 
           <button
             type="button"
@@ -240,51 +276,43 @@ function MainPage(props) {
           >
             უარი საწარმოსგან
           </button>
+
+          <button
+            type="button"
+            className="btn btn-primary mx-2"
+            onClick={(e) => ChangeStatus(true)}
+          >
+            სტატუსის ცვლილება
+          </button>
         </form>
       </nav>
       {companyData && (
         <div className="table-responsive">
           <table className="table mx-1">
             <tbody>
-              <tr className="table-dark text-center">
-                <td>Change</td>
-                <td>SID</td>
-                <td>LongName</td>
-                <td>TaxID1</td>
-                <td>area</td>
-                <td>Location</td>
-                <td>farea</td>
-                <td>FLocation</td>
-                <td>Activity_code</td>
-                <td>Activity_name</td>
-                <td>LegalFormID</td>
-                <td>Phone</td>
-                <td>HeadFname</td>
-                <td>HeadLname</td>
-                <td>Email</td>
-                <td>Web</td>
-                <td>sms</td>
-                <td>TaxEmail</td>
-                <td>TaxPhone</td>
-                <td>user_id</td>
-                <td>Strata1</td>
-                <td>Strata2</td>
-                <td>Strata3</td>
-                <td>Strata</td>
-              </tr>
+              {companyData.length ? <TableHeaders /> : ""}
 
-              {companyData && <Item companyData={companyData[0]} />}
+              {companyData.length ? (
+                <Item companyData={companyData[0]} />
+              ) : (
+                <tr className="mx-2 mt-4">
+                  <td>{notFound}</td>
+                </tr>
+              )}
 
-              {companyData && otherCompany && otherCompany.length && (
+              {companyData && otherCompany && otherCompany.length ? (
                 <ItemsAlike
                   companyData={otherCompany[0]}
                   oldCompanyData={companyData[0]}
                   SetcompaniesSuccsess={SetcompaniesSuccsess}
                   SetrejectPopUpRender={SetrejectPopUpRender}
                 />
-              ) }
+              ) : (
+                <tr className="mt-4 mx-2">
+                  <td>{otherCompanyNotFound}</td>
+                </tr>
+              )}
 
-              {companiesSuccsess && successItems}
             </tbody>
           </table>
         </div>
@@ -300,6 +328,12 @@ function MainPage(props) {
       <RejectedItems
         SetRejectedRender={SetRejectedRender}
         rejectedRender={rejectedRender}
+      />
+
+      <SuccessItems
+      SetSuccessRender={SetSuccessRender}
+      successRender={successRender}
+      companiesSuccsess={companiesSuccsess}
       />
     </div>
   );

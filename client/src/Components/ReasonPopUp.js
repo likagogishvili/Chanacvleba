@@ -6,19 +6,19 @@ function ReasonPopUp(props) {
 
   function SendRejectReason(event) {
     event.preventDefault();
-        let SID = props.companyData.SID;
-        let Status_Sampling = 4;
-        let Reject_Reason = reason;
-        axios
-          .post("http://localhost:4000/clickedItemUpdate", {
-            SID: SID,
-            Status_Sampling: Status_Sampling,
-            Reject_Reason: Reject_Reason,
-          })
-          .then(() => {
-            alert("სტატუსი განახლებულია (სტატუსი 4)");
-          });
-      props.SetrejectPopUpRender(false);
+    let SID = props.companyData.SID;
+    let Status_Sampling = 4;
+    let Reject_Reason = reason;
+    axios
+      .post("http://localhost:4000/clickedItemUpdate", {
+        SID: SID,
+        Status_Sampling: Status_Sampling,
+        Reject_Reason: Reject_Reason,
+      })
+      .then(() => {
+        alert("სტატუსი განახლებულია (სტატუსი 4)");
+      });
+    props.SetrejectPopUpRender(false);
   }
   return (
     <div>
@@ -26,7 +26,7 @@ function ReasonPopUp(props) {
         <div className="iconVideo">
           <div className="VideoBox">
             <div className="d-flex justify-content-between p-3 pb-0">
-              <p>შეიყვანეთ მიზეზი</p>
+              <p>მონიშნეთ მიზეზი</p>
 
               <button
                 type="button"
@@ -45,13 +45,59 @@ function ReasonPopUp(props) {
             />
             <div>
               <div className="form-floating">
-                <textarea
-                  className="form-control mt-5 m-auto"
-                  id="reason"
-                  style={{ height: "100px", width: "90%" }}
+                <div
                   onChange={(e) => setReason(e.target.value)}
-                  value={reason}
-                ></textarea>
+                  className="m-4"
+                >
+                  <div className="form-check form-check-inline">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="inlineRadio0"
+                      value="0"
+                    />
+                    <label className="form-check-label" htmlFor="inlineRadio0">
+                      0
+                    </label>
+                  </div>
+                  <div className="form-check form-check-inline">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="inlineRadio1"
+                      value="1"
+                    />
+                    <label className="form-check-label" htmlFor="inlineRadio1">
+                      1
+                    </label>
+                  </div>
+                  <div className="form-check form-check-inline">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="inlineRadio2"
+                      value="2"
+                    />
+                    <label className="form-check-label" htmlFor="inlineRadio2">
+                      2
+                    </label>
+                  </div>
+                  <div className="form-check form-check-inline">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="inlineRadioOptions"
+                      id="inlineRadio3"
+                      value="3"
+                    />
+                    <label className="form-check-label" htmlFor="inlineRadio3">
+                      3{" "}
+                    </label>
+                  </div>
+                </div>
               </div>
               <button
                 type="submit"
