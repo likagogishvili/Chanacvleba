@@ -13,14 +13,18 @@ function MainPage(props) {
   const [companyData, setCompanyData] = useState();
   const [otherCompany, setOtherCompany] = useState();
   const [companiesSuccsess, SetcompaniesSuccsess] = useState();
-  const [rejectPopUpRender, SetrejectPopUpRender] = useState(false);
-  const [rejectedRender, SetRejectedRender] = useState(false);
-  const [successRender, SetSuccessRender] = useState(false);
+  const [statusResult, setstatusResult] = useState();
+  
+  //not Found Texts
   const [notFound, SetNotFound] = useState("");
   const [otherCompanyNotFound, setOtherCompanyNotFound] = useState();
 
-  // const [statusSampling, setStatusSampling] = useState();
-  const [statusResult, setstatusResult] = useState();
+//popUPS
+const [successRender, SetSuccessRender] = useState(false);
+  const [rejectPopUpRender, SetrejectPopUpRender] = useState(false);
+  const [rejectedRender, SetRejectedRender] = useState(false);
+  const [updateStatusPopUp, SetUpdateStatusPopUp] = useState(false);
+
   let navigate = useNavigate();
 
   useEffect(() => {
@@ -70,33 +74,6 @@ function MainPage(props) {
       }
     }
   }
-
-  //pirveli, kodit status cvlileba
-  // function ChangeValues() {
-  //   if (companyData) {
-  //     if (
-  //       companyData[0].Status_Sampling !== statusSampling ||
-  //       companyData[0].Status_Result !== statusResult
-  //     ) {
-  //       let Status_Sampling = statusSampling;
-  //       let Status_Result = statusResult;
-  //       let SID = companyData[0].SID;
-  //       axios
-  //         .post("http://localhost:4000/updateDB", {
-  //           Status_Sampling: Status_Sampling,
-  //           Status_Result: Status_Result,
-  //           SID: SID,
-  //         })
-  //         .then(() => {
-  //           alert("განახლებულია");
-  //           GetValue();
-  //         });
-  //     }
-  //   }
-  // }
-
-  //next Value
-  //getNextValue
 
   function GetNextValue(event) {
     event.preventDefault();
@@ -150,7 +127,6 @@ function MainPage(props) {
   }
 
   //სტატუსის ცვლილება
-
   function ChangeStatus() {
     let baseURL = `http://localhost:4000/newStratas`;
     axios.get(baseURL).then((response) => {
@@ -158,6 +134,8 @@ function MainPage(props) {
     });
     SetSuccessRender(true);
   }
+
+  //სხვა საწარმოების რედაქტირება
 
   return (
     <div className="container-fluid">
@@ -231,35 +209,6 @@ function MainPage(props) {
           className="form-inline d-flex flex-row m-4"
           style={{ width: "60%" }}
         >
-          {/* <div className="input-group" style={{ width: "25%" }}>
-            <div className="input-group-prepend">
-              <label
-                className="input-group-text mx-2"
-                style={{ border: "none", backgroundColor: "white" }}
-                htmlFor="inputGroupSelect01"
-              >
-                Status_Sampling
-              </label>
-            </div>
-
-            <select
-              className="custom-select"
-              id="Status_Sampling"
-              defaultValue={"DEFAULT"}
-              value={statusSampling}
-              onChange={(e) => {
-                setStatusSampling(e.target.value);
-              }}
-            >
-              <option value="DEFAULT" disabled></option>
-              <option value="0">0</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-            </select>
-          </div> */}
-
           <button
             type="button"
             className="btn btn-success mx-2"
@@ -281,6 +230,14 @@ function MainPage(props) {
             onClick={(e) => ChangeStatus(true)}
           >
             სტატუსის ცვლილება
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-secondary  mx-2"
+            onClick={(e) => SetUpdateStatusPopUp(true)}
+          >
+            საწარმოს რედაქტირება
           </button>
         </form>
       </nav>
