@@ -101,6 +101,8 @@ function Sitem(props) {
       <td className="pt-4">{props.companyData?.Strata2}</td>
       <td className="pt-4">{props.companyData?.Strata3}</td>
       <td className="pt-4">{props.companyData?.Strata}</td>
+      <td className="pt-4">{props.companyData?.Status_Sampling}</td>
+      <td className="pt-4">{props.companyData?.Status_Result}</td>
     </tr>
   );
 }

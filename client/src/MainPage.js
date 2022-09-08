@@ -7,6 +7,7 @@ import ReasonPopUp from "./Components/ReasonPopUp";
 import RejectedItems from "./Rejected/RejectedItems";
 import { useNavigate } from "react-router-dom";
 import TableHeaders from "./Components/TableHeaders";
+import UpdateStatusPopUp from "./UpdateStatusPopUp/UpdateStatusPopUp";
 
 function MainPage(props) {
   const [companyCode, setCompanyCode] = useState("");
@@ -14,13 +15,13 @@ function MainPage(props) {
   const [otherCompany, setOtherCompany] = useState();
   const [companiesSuccsess, SetcompaniesSuccsess] = useState();
   const [statusResult, setstatusResult] = useState();
-  
+
   //not Found Texts
   const [notFound, SetNotFound] = useState("");
   const [otherCompanyNotFound, setOtherCompanyNotFound] = useState();
 
-//popUPS
-const [successRender, SetSuccessRender] = useState(false);
+  //popUPS
+  const [successRender, SetSuccessRender] = useState(false);
   const [rejectPopUpRender, SetrejectPopUpRender] = useState(false);
   const [rejectedRender, SetRejectedRender] = useState(false);
   const [updateStatusPopUp, SetUpdateStatusPopUp] = useState(false);
@@ -288,6 +289,11 @@ const [successRender, SetSuccessRender] = useState(false);
         SetSuccessRender={SetSuccessRender}
         successRender={successRender}
         companiesSuccsess={companiesSuccsess}
+      />
+
+      <UpdateStatusPopUp
+        SetUpdateStatusPopUp={SetUpdateStatusPopUp}
+        updateStatusPopUp={updateStatusPopUp}
       />
     </div>
   );

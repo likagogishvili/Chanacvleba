@@ -215,6 +215,18 @@ app.get("/allRejectedItems", (req, res) => {
   });
 });
 
+//update company status
+app.post("/UpdateStatusForSpecificCompany", (req, res) => {
+  const SID = req.body.SID;
+  const Status_Sampling = req.body.Status_Sampling;
+  const Status_Result = req.body.Status_Result;
+  const sqlUpdate = `UPDATE companies SET Status_Sampling ='${Status_Sampling}', Status_Result='${Status_Result}' WHERE SID like ${SID} OR TaxID1 like ${SID}`;
+  db.query(sqlUpdate, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
 ///////////////////////////////////////////////////////////signIn////////////////////////////////
 app.get("/signInTable", (req, res) => {
   let sql =

@@ -69,6 +69,8 @@ function RejectedItems(props) {
                     <td>Strata2</td>
                     <td>Strata3</td>
                     <td>Strata</td>
+                    <td>Status_Sampling</td>
+                    <td>Status_Result</td>
                   </tr>
                   {rejectedItems && rejectedItem}
                 </tbody>

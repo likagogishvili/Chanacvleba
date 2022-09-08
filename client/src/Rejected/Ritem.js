@@ -2,7 +2,9 @@ function Ritem(props) {
   return (
     <tr className="text-center" style={{ background: "#E8E9EB" }}>
       <td className="pt-4">{props.companyData?.SID}</td>
-      <td className="pt-4">{props.companyData?.ParentId}</td>
+      <td className="pt-4">
+        {props.companyData?.ParentId === 0 ? "" : props.companyData?.ParentId}
+      </td>
       <td className="pt-4">{props.companyData?.LongName}</td>
       <td className="pt-4">{props.companyData?.TaxID1}</td>
       <td className="pt-4">{props.companyData?.area?.replace(/\s/g, "")}</td>
@@ -25,6 +27,8 @@ function Ritem(props) {
       <td className="pt-4">{props.companyData?.Strata2}</td>
       <td className="pt-4">{props.companyData?.Strata3}</td>
       <td className="pt-4">{props.companyData?.Strata}</td>
+      <td className="pt-4">{props.companyData?.Status_Sampling}</td>
+      <td className="pt-4">{props.companyData?.Status_Result}</td>
     </tr>
   );
 }

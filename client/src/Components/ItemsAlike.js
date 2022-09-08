@@ -2,19 +2,18 @@ import "./item.css";
 import axios from "axios";
 function ItemsAlike(props) {
   function Accept() {
-        let SID = props.companyData.SID;
-        axios
-          .post("http://localhost:4000/acceptStatusStrata", {
-            SID: SID,
-          })
-          .then(() => {
-            alert("მიენიჭა სტატუსი 3");
-          });
+    let SID = props.companyData.SID;
+    axios
+      .post("http://localhost:4000/acceptStatusStrata", {
+        SID: SID,
+      })
+      .then(() => {
+        alert("მიენიჭა სტატუსი 3");
+      });
   }
 
-
   function Reject() {
-    props.SetrejectPopUpRender(true)
+    props.SetrejectPopUpRender(true);
   }
 
   return (
@@ -38,6 +37,9 @@ function ItemsAlike(props) {
         </div>
       </td>
       <td className="pt-4">{props.companyData?.SID}</td>
+      <td className="pt-4">
+        {props.companyData?.ParentId === 0 ? "" : props.companyData?.ParentId}
+      </td>
       <td className="pt-4">{props.companyData?.LongName}</td>
       <td className="pt-4">{props.companyData?.TaxID1}</td>
       <td className="pt-4">{props.companyData?.area?.replace(/\s/g, "")}</td>
@@ -60,6 +62,8 @@ function ItemsAlike(props) {
       <td className="pt-4">{props.companyData?.Strata2}</td>
       <td className="pt-4">{props.companyData?.Strata3}</td>
       <td className="pt-4">{props.companyData?.Strata}</td>
+      <td className="pt-4">{props.companyData?.Status_Sampling}</td>
+      <td className="pt-4">{props.companyData?.Status_Result}</td>
     </tr>
   );
 }

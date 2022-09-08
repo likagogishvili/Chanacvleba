@@ -3,6 +3,7 @@ function TableHeaders() {
     <tr className="table-dark text-center">
       <td>Change</td>
       <td>SID</td>
+      <td>ParentId</td>
       <td>LongName</td>
       <td>TaxID1</td>
       <td>area</td>
@@ -25,6 +26,8 @@ function TableHeaders() {
       <td>Strata2</td>
       <td>Strata3</td>
       <td>Strata</td>
+      <td>Status_Sampling</td>
+      <td>Status_Result</td>
     </tr>
   );
 }
