@@ -9,12 +9,16 @@ let users = [
     lname: "gogishvili",
     userName: "lg",
     password: "lika2001",
+    area: 12,
+
   },
   {
     name: "John",
     lname: "Doe",
     userName: "jl",
     password: "jl123",
+    area: 13,
+
   },
 ];
 
@@ -26,27 +30,28 @@ for (let i = 2; i < 8; i++) {
   const LongName = worksheet[`C${i}`].v;
   const TaxID1 = worksheet[`D${i}`].v;
   const area = worksheet[`E${i}`].v;
-  const Location = worksheet[`F${i}`].v;
-  const farea = worksheet[`G${i}`].v;
-  const FLocation = worksheet[`H${i}`].v;
-  const Activity_code = worksheet[`I${i}`].v;
-  const Activity_name = worksheet[`J${i}`].v;
-  const LegalFormID = worksheet[`K${i}`].v;
-  const Phone = worksheet[`L${i}`].v;
-  const HeadFname = worksheet[`M${i}`].v;
-  const HeadLname = worksheet[`N${i}`].v;
-  const Email = worksheet[`O${i}`].v;
-  const Web = worksheet[`P${i}`].v;
-  const sms = worksheet[`Q${i}`].v;
-  const TaxEmail = worksheet[`R${i}`].v;
-  const TaxPhone = worksheet[`S${i}`].v;
-  const user_id = worksheet[`T${i}`].v;
-  const Strata1 = worksheet[`U${i}`].v;
-  const Strata2 = worksheet[`V${i}`].v;
-  const Strata3 = worksheet[`W${i}`].v;
-  const Strata = worksheet[`X${i}`].v;
-  const Status_Sampling = worksheet[`Y${i}`].v;
-  const Status_Result = worksheet[`Z${i}`].v;
+  const areaCode = worksheet[`F${i}`].v;
+  const Location = worksheet[`G${i}`].v;
+  const farea = worksheet[`H${i}`].v;
+  const FLocation = worksheet[`I${i}`].v;
+  const Activity_code = worksheet[`J${i}`].v;
+  const Activity_name = worksheet[`K${i}`].v;
+  const LegalFormID = worksheet[`L${i}`].v;
+  const Phone = worksheet[`M${i}`].v;
+  const HeadFname = worksheet[`N${i}`].v;
+  const HeadLname = worksheet[`O${i}`].v;
+  const Email = worksheet[`P${i}`].v;
+  const Web = worksheet[`Q${i}`].v;
+  const sms = worksheet[`R${i}`].v;
+  const TaxEmail = worksheet[`S${i}`].v;
+  const TaxPhone = worksheet[`T${i}`].v;
+  const user_id = worksheet[`U${i}`].v;
+  const Strata1 = worksheet[`V${i}`].v;
+  const Strata2 = worksheet[`W${i}`].v;
+  const Strata3 = worksheet[`X${i}`].v;
+  const Strata = worksheet[`Y${i}`].v;
+  const Status_Sampling = worksheet[`Z${i}`].v;
+  const Status_Result = worksheet[`AA${i}`].v;
 
   companyData.push({
     id: k,
@@ -54,6 +59,7 @@ for (let i = 2; i < 8; i++) {
     ParentId: ParentId,
     LongName: LongName,
     TaxID1: TaxID1,
+    areaCode:areaCode,
     area: area,
     Location: Location,
     farea: farea,
@@ -78,6 +84,5 @@ for (let i = 2; i < 8; i++) {
     Status_Result: Status_Result,
   });
 }
-
 exports.companyData = companyData;
 exports.users = users;

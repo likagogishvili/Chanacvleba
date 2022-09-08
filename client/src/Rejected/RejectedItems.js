@@ -12,8 +12,14 @@ function RejectedItems(props) {
     });
   }, []);
 
+  let area = JSON.parse(window.sessionStorage.getItem("user")).area;
+
   if (rejectedItems) {
-    var rejectedItem = rejectedItems.map((item) => (
+    const filtered = rejectedItems?.filter((item) => {
+      // eslint-disable-next-line
+      return item.area == area;
+    });
+    var rejectedItem = filtered.map((item) => (
       <Ritem key={item.id} companyData={item} />
     ));
   }

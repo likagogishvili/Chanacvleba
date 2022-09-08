@@ -39,7 +39,7 @@ app.get("/createdb", (req, res) => {
 // Create Table
 app.get("/companies", (req, res) => {
   let sql =
-    "CREATE TABLE companies (id int NOT NULL AUTO_INCREMENT, SID int, ParentId int, LongName varchar(255), TaxID1 int, area varchar(255), Location varchar(255), farea varchar(255), FLocation varchar(255), Activity_code varchar(255), Activity_name varchar(255), LegalFormID int, Phone int, HeadFname varchar(255), HeadLname varchar(255), Email varchar(255), Web varchar(255), sms varchar(255), TaxEmail varchar(255), TaxPhone int, user_id int, Strata1 int,Strata2 int, Strata3 varchar(255), Strata varchar(255), Status_Sampling varchar(255), Status_Result varchar(255), PRIMARY KEY (id));";
+    "CREATE TABLE companies (id int NOT NULL AUTO_INCREMENT, SID int, ParentId int, LongName varchar(255), TaxID1 int, areaCode varchar(255), area varchar(255), Location varchar(255), farea varchar(255), FLocation varchar(255), Activity_code varchar(255), Activity_name varchar(255), LegalFormID int, Phone int, HeadFname varchar(255), HeadLname varchar(255), Email varchar(255), Web varchar(255), sms varchar(255), TaxEmail varchar(255), TaxPhone int, user_id int, Strata1 int,Strata2 int, Strata3 varchar(255), Strata varchar(255), Status_Sampling varchar(255), Status_Result varchar(255), PRIMARY KEY (id));";
   db.query(sql, (err, result) => {
     if (err) throw err;
     res.send("Table created");
@@ -50,7 +50,7 @@ app.get("/companies", (req, res) => {
 app.get("/addCompany", (req, res) => {
   let sql = "INSERT INTO companies SET ?";
   let query = db.query(
-    "INSERT INTO companies (id, SID, ParentId, LongName, TaxID1, area, Location, farea, FLocation, Activity_code, Activity_name, LegalFormID, Phone, HeadFname,HeadLname, Email, Web, sms, TaxEmail, TaxPhone, user_id, Strata1,Strata2, Strata3, Strata, Status_Sampling, Status_Result) VALUES ?",
+    "INSERT INTO companies (id, SID, ParentId, LongName, TaxID1, areaCode, area, Location, farea, FLocation, Activity_code, Activity_name, LegalFormID, Phone, HeadFname,HeadLname, Email, Web, sms, TaxEmail, TaxPhone, user_id, Strata1,Strata2, Strata3, Strata, Status_Sampling, Status_Result) VALUES ?",
     [
       data.map((item) => [
         item.id,
@@ -58,6 +58,7 @@ app.get("/addCompany", (req, res) => {
         item.ParentId,
         item.LongName,
         item.TaxID1,
+        item.areaCode,
         item.area,
         item.Location,
         item.farea,
@@ -230,7 +231,7 @@ app.post("/UpdateStatusForSpecificCompany", (req, res) => {
 ///////////////////////////////////////////////////////////signIn////////////////////////////////
 app.get("/signInTable", (req, res) => {
   let sql =
-    "CREATE TABLE users (id int NOT NULL AUTO_INCREMENT, name varchar(255), lname varchar(255), userName varchar(255), password varchar(255), PRIMARY KEY (id));";
+    "CREATE TABLE users (id int NOT NULL AUTO_INCREMENT, name varchar(255), lname varchar(255), userName varchar(255), password varchar(255),area int, PRIMARY KEY (id));";
 
   db.query(sql, (err, result) => {
     if (err) throw err;
@@ -241,13 +242,15 @@ app.get("/signInTable", (req, res) => {
 app.get("/addUsers", (req, res) => {
   let sql = "INSERT INTO users SET ?";
   let query = db.query(
-    "INSERT INTO users (name,lname,userName,password) VALUES ?",
+    "INSERT INTO users (name,lname,userName,password,area) VALUES ?",
     [
       users.map((item) => [
         item.name,
         item.lname,
         item.userName,
         item.password,
+        item.area,
+
       ]),
     ],
     (err, results) => {
